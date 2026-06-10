@@ -1,0 +1,62 @@
+import { Request, Response } from 'express';
+import { createShortUrl, getUserUrls, updateComment, toggleUrl, redirectUrl } from './urls.service';
+
+// POST /urls — create a new short url
+export const create = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const result = await createShortUrl(req.body, req.user!.userId);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(400).json({
+      message: error instanceof Error ? error.message : 'Failed to create URL',
+    });
+  }
+};
+
+// GET /urls — get all urls for the logged in user
+export const getAll = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const urls = await getUserUrls(req.user!.userId);
+    res.status(200).json(urls);
+  } catch (error) {
+    res.status(500).json({
+      message: error instanceof Error ? error.message : 'Failed to fetch URLs',
+    });
+  }
+};
+
+// PATCH /urls/:id/comment — update comment on a url
+export const updateUrlComment = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const result = await updateComment(req.params.id as string, req.body, req.user!.userId);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json({
+      message: error instanceof Error ? error.message : 'Failed to update comment',
+    });
+  }
+};
+
+// PATCH /urls/:id/toggle — enable or disable a url
+export const toggleUrlStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const result = await toggleUrl(req.params.id as string, req.body.isActive, req.user!.userId);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json({
+      message: error instanceof Error ? error.message : 'Failed to toggle URL',
+    });
+  }
+};
+
+// GET /:shortCode — redirect to original url
+export const redirect = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const originalUrl = await redirectUrl(req.params.shortCode as string);
+    res.redirect(302, originalUrl);
+  } catch (error) {
+    res.status(404).json({
+      message: error instanceof Error ? error.message : 'URL not found',
+    });
+  }
+};
