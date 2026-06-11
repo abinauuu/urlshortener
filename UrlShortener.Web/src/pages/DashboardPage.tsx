@@ -10,6 +10,7 @@ function DashboardPage() {
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingComment, setEditingComment] = useState('');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUrls = async () => {
@@ -60,6 +61,12 @@ function DashboardPage() {
     setEditingComment('');
   };
 
+  const handleCopy = async (id: string, shortCode: string) => {
+    await navigator.clipboard.writeText(`${import.meta.env.VITE_API_URL}/${shortCode}`);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   if (loading) return <div className="text-center mt-20">Loading...</div>;
   if (error) return <div className="text-center mt-20 text-red-500">{error}</div>;
 
@@ -94,9 +101,22 @@ function DashboardPage() {
                     <div key={url.id} className="bg-white rounded-lg shadow p-4">
                       <div className="flex justify-between items-start">
                         <div className="flex-1 min-w-0 mr-4">
-                          <p className="text-sm font-medium text-blue-600 truncate">
-                            {import.meta.env.VITE_API_URL}/{url.shortCode}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={`${import.meta.env.VITE_API_URL}/${url.shortCode}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm font-medium text-blue-600 truncate hover:underline"
+                            >
+                              {import.meta.env.VITE_API_URL}/{url.shortCode}
+                            </a>
+                            <button
+                              onClick={() => void handleCopy(url.id, url.shortCode)}
+                              className="text-xs text-gray-400 hover:text-blue-500 shrink-0"
+                            >
+                              {copiedId === url.id ? 'Copied!' : 'Copy'}
+                            </button>
+                          </div>
                           <p className="text-sm text-gray-500 truncate mt-1">{url.originalUrl}</p>
                           {editingId === url.id ? (
                             <div className="flex items-center gap-2 mt-2">
