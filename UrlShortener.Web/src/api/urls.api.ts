@@ -16,7 +16,7 @@ export const updateComment = async (id: string, data: UpdateCommentDto): Promise
     return response.data;
 };
 
-export const toggleUrlStatus = async (id: string): Promise<UrlResponse> => {
-    const response = await api.patch<UrlResponse>(`/urls/${id}/toggle`);
+export const toggleUrlStatus = async (id: string, isActive: boolean): Promise<UrlResponse> => {
+    const response = await api.patch<UrlResponse>(`/urls/${id}/toggle`, { isActive });
     return response.data;
 };

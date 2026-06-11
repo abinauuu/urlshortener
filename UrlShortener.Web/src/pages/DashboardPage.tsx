@@ -31,9 +31,9 @@ function DashboardPage() {
     navigate('/login');
   };
 
-  const handleToggle = async (id: string) => {
+  const handleToggle = async (id: string, isActive: boolean) => {
     try {
-      const updated = await toggleUrlStatus(id);
+      const updated = await toggleUrlStatus(id, !isActive);
       setUrls(urls.map(url => url.id === id ? updated : url));
     } catch {
       setError('Failed to update URL');
@@ -121,7 +121,7 @@ function DashboardPage() {
                         <div className="flex items-center gap-3">
                           <span className="text-sm text-gray-500">{url.clicks} clicks</span>
                           <button
-                              onClick={() => handleToggle(url.id)}
+                              onClick={() => handleToggle(url.id, url.isActive)}
                               className={`text-xs px-3 py-1 rounded-full font-medium ${
                                   url.isActive
                                       ? 'bg-green-100 text-green-700'
