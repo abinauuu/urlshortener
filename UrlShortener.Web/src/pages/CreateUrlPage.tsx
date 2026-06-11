@@ -10,6 +10,11 @@ function CreateUrlPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const handlePaste = async () => {
+    const text = await navigator.clipboard.readText();
+    setOriginalUrl(text);
+  };
+
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -58,14 +63,23 @@ function CreateUrlPage() {
               <label className="block text-sm font-medium mb-1">
                 Original URL <span className="text-red-500">*</span>
               </label>
-              <input
-                type="url"
-                value={originalUrl}
-                onChange={(e) => setOriginalUrl(e.target.value)}
-                className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="https://example.com/very/long/url"
-                required
-              />
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={originalUrl}
+                  onChange={(e) => setOriginalUrl(e.target.value)}
+                  className="flex-1 border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="https://example.com/very/long/url"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => void handlePaste()}
+                  className="px-3 py-2 border rounded text-sm text-gray-500 hover:text-blue-600 hover:border-blue-400 shrink-0"
+                >
+                  Paste
+                </button>
+              </div>
             </div>
 
             <div className="mb-4">
