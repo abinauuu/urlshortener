@@ -118,6 +118,9 @@ function DashboardPage() {
                             </button>
                           </div>
                           <p className="text-sm text-gray-500 truncate mt-1">{url.originalUrl}</p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            Expires: {new Date(url.expiresAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </p>
                           {editingId === url.id ? (
                             <div className="flex items-center gap-2 mt-2">
                               <input
