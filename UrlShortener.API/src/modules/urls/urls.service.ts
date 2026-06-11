@@ -81,7 +81,6 @@ export const updateComment = async (
 
 export const toggleUrl = async (
   id: string,
-  isActive: boolean,
   userId: string,
 ): Promise<UrlResponse> => {
   const url = await findUrlById(id);
@@ -94,7 +93,7 @@ export const toggleUrl = async (
     throw new Error('Unauthorized');
   }
 
-  const updated = await toggleUrlActive(id, isActive);
+  const updated = await toggleUrlActive(id, !url.isActive);
   return mapToUrlResponse(updated);
 };
 

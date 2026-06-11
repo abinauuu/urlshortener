@@ -40,7 +40,7 @@ export const updateUrlComment = async (req: Request, res: Response): Promise<voi
 // PATCH /urls/:id/toggle — enable or disable a url
 export const toggleUrlStatus = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await toggleUrl(req.params.id as string, req.body.isActive, req.user!.userId);
+    const result = await toggleUrl(req.params.id as string, req.user!.userId);
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({
