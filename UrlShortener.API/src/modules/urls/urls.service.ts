@@ -27,7 +27,11 @@ const mapToUrlResponse = (url: Url): UrlResponse => {
   };
 };
 
-export const createShortUrl = async (dto: CreateUrlDto, userId: string): Promise<UrlResponse> => {
+export const createShortUrl = async (dto: CreateUrlDto, userId?: string): Promise<UrlResponse> => {
+  if (!userId && dto.shortCode) {
+    throw new Error('Custom short codes require an account');
+  }
+
   let shortCode = dto.shortCode || generateShortCode();
 
   if (dto.shortCode) {
@@ -42,7 +46,9 @@ export const createShortUrl = async (dto: CreateUrlDto, userId: string): Promise
   }
 
   const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 90);
+  userId
+    ? expiresAt.setDate(expiresAt.getDate() + 90)
+    : expiresAt.setMonth(expiresAt.getMonth() + 1);
 
   const url = await createUrl({
     originalUrl: dto.originalUrl,
