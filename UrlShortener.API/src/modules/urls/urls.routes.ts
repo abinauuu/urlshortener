@@ -6,7 +6,7 @@ import { createUrlSchema, updateCommentSchema } from './urls.schemas';
 
 const router = Router();
 
-router.post('/', authenticate, validate(createUrlSchema), create);
+router.post('/', validate(createUrlSchema), create);
 router.get('/', authenticate, getAll);
 router.patch('/:id/comment', authenticate, validate(updateCommentSchema), updateUrlComment);
 router.patch('/:id/toggle', authenticate, toggleUrlStatus);

@@ -6,6 +6,11 @@ export const createUrl = async (data: CreateUrlDto): Promise<UrlResponse> => {
     return response.data;
 };
 
+export const createGuestUrl = async (originalUrl: string): Promise<UrlResponse> => {
+    const response = await api.post<UrlResponse>('/urls', { originalUrl });
+    return response.data;
+};
+
 export const getAllUrls = async (): Promise<UrlResponse[]> => {
     const response = await api.get<UrlResponse[]>('/urls');
     return response.data;

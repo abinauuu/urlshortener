@@ -24,9 +24,17 @@ export const createUrl = async (data: {
   shortCode: string;
   comment?: string;
   expiresAt: Date;
-  userId: string;
+  userId?: string;
 }) => {
-  return await prisma.url.create({ data });
+  return await prisma.url.create({
+    data: {
+      originalUrl: data.originalUrl,
+      shortCode: data.shortCode,
+      comment: data.comment,
+      expiresAt: data.expiresAt,
+      ...(data.userId && { userId: data.userId }),
+    }
+  });
 };
 
 export const updateUrlComment = async (id: string, comment: string) => {

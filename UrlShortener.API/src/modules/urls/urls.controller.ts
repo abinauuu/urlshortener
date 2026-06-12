@@ -1,15 +1,20 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { createShortUrl, getUserUrls, updateComment, toggleUrl, redirectUrl } from './urls.service';
 
+const SAFE_ERRORS = ['Short code already in use', 'Custom short codes require an account', 'URL not found', 'Unauthorized'];
+
 // POST /urls — create a new short url
-export const create = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const result = await createShortUrl(req.body, req.user!.userId);
+    const result = await createShortUrl(req.body, req.user?.userId);
     res.status(201).json(result);
   } catch (error) {
-    res.status(400).json({
-      message: error instanceof Error ? error.message : 'Failed to create URL',
-    });
+    const message = error instanceof Error ? error.message : '';
+    if (SAFE_ERRORS.includes(message)) {
+      res.status(400).json({ message });
+    } else {
+      next(error);
+    }
   }
 };
 
