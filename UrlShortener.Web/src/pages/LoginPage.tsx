@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../api/auth.api';
+import { setTokens } from '../utils/auth.utils';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function LoginPage() {
 
     try {
       const response = await login({ email, password });
-      localStorage.setItem('token', response.token);
+      setTokens(response.accessToken, response.refreshToken);
       navigate('/dashboard');
     } catch (err) {
       if (typeof err === 'object' && err !== null && 'response' in err) {

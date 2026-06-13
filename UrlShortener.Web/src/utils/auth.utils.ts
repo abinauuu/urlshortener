@@ -21,3 +21,13 @@ export const getRole = (): string | null => {
   if (!token) return null;
   return decodeToken(token)?.role ?? null;
 };
+
+export const setTokens = (accessToken: string, refreshToken: string): void => {
+  localStorage.setItem('token', accessToken);
+  localStorage.setItem('refreshToken', refreshToken);
+};
+
+export const clearTokens = (): void => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('refreshToken');
+};

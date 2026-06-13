@@ -14,3 +14,22 @@ export const createUser = async (email: string, hashedPassword: string) => {
         },
     });
 };
+
+export const createRefreshToken = async (userId: string, tokenHash: string, expiresAt: Date) => {
+    return prisma.refreshToken.create({
+        data: { userId, tokenHash, expiresAt },
+    });
+};
+
+export const findRefreshToken = async (tokenHash: string) => {
+    return prisma.refreshToken.findUnique({
+        where: { tokenHash },
+        include: { user: true },
+    });
+};
+
+export const deleteRefreshToken = async (tokenHash: string) => {
+    return prisma.refreshToken.delete({
+        where: { tokenHash },
+    });
+};

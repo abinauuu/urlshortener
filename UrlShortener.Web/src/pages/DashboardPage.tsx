@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllUrls, toggleUrlStatus, updateComment } from '../api/urls.api';
-import { getRole } from '../utils/auth.utils';
+import { logout } from '../api/auth.api';
+import { getRole, clearTokens } from '../utils/auth.utils';
 import type { UrlResponse } from '../types/url.types';
 
 function DashboardPage() {
@@ -29,8 +30,16 @@ function DashboardPage() {
     void fetchUrls();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
+  const handleLogout = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      try {
+        await logout(refreshToken);
+      } catch {
+        /* even if revocation fails, clear locally */
+      }
+    }
+    clearTokens();
     navigate('/login');
   };
 
