@@ -19,9 +19,9 @@ export const registerUser = async (dto: RegisterDto): Promise<AuthResponse> =>{
 
     const secret = process.env.JWT_SECRET!;
     const token = jwt.sign(
-        { userId: user.id, email: user.email},
+        { userId: user.id, email: user.email, role: user.role },
         secret,
-        {expiresIn: '7d'},  
+        {expiresIn: '7d'},
     );
 
     return{
@@ -29,6 +29,7 @@ export const registerUser = async (dto: RegisterDto): Promise<AuthResponse> =>{
         user: {
             id: user.id,
             email: user.email,
+            role: user.role,
         },
     };
 };
@@ -49,16 +50,17 @@ export const loginUser = async (dto: LoginDto): Promise<AuthResponse> =>{
 
     const secret = process.env.JWT_SECRET!;
     const token = jwt.sign(
-        { userId: user.id, email: user.email },
+        { userId: user.id, email: user.email, role: user.role },
         secret,
-        { expiresIn: '7d'},
+        { expiresIn: '7d' },
     );
-    
+
     return{
         token,
         user: {
             id: user.id,
             email: user.email,
+            role: user.role,
         },
     };
 };
