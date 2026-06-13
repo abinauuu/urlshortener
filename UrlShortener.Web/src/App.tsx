@@ -6,6 +6,10 @@ import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import CreateUrlPage from './pages/CreateUrlPage';
 import HomePage from './pages/HomePage';
+import AdminRoute from './components/AdminRoute';
+import AdminStatsPage from './pages/AdminStatsPage';
+import AdminUsersPage from './pages/AdminUsersPage';
+import AdminUrlsPage from './pages/AdminUrlsPage';
 
 function App() {
   return (
@@ -15,6 +19,9 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
       <Route path="/dashboard/create" element={<ProtectedRoute><CreateUrlPage /></ProtectedRoute>} />
+      <Route path="/admin" element={<AdminRoute><AdminStatsPage /></AdminRoute>} />
+      <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
+      <Route path="/admin/urls" element={<AdminRoute><AdminUrlsPage /></AdminRoute>} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

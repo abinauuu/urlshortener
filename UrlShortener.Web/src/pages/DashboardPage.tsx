@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllUrls, toggleUrlStatus, updateComment } from '../api/urls.api';
+import { getRole } from '../utils/auth.utils';
 import type { UrlResponse } from '../types/url.types';
 
 function DashboardPage() {
@@ -11,6 +12,7 @@ function DashboardPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingComment, setEditingComment] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const isAdmin = getRole() === 'ADMIN';
 
   useEffect(() => {
     const fetchUrls = async () => {
@@ -74,12 +76,22 @@ function DashboardPage() {
       <div className="min-h-screen bg-gray-100">
         <nav className="bg-white shadow px-6 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">URL Shortener</h1>
-          <button
-              onClick={handleLogout}
-              className="text-sm text-red-600 hover:underline"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-4">
+            {isAdmin && (
+              <button
+                  onClick={() => navigate('/admin')}
+                  className="text-sm text-blue-600 hover:underline"
+              >
+                Admin
+              </button>
+            )}
+            <button
+                onClick={handleLogout}
+                className="text-sm text-red-600 hover:underline"
+            >
+              Logout
+            </button>
+          </div>
         </nav>
 
         <div className="max-w-4xl mx-auto py-8 px-4">
