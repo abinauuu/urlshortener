@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../api/auth.api';
+import { setTokens } from '../utils/auth.utils';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function RegisterPage() {
 
     try {
       const response = await register({ email, password });
-      localStorage.setItem('token', response.token);
+      setTokens(response.accessToken, response.refreshToken);
       navigate('/dashboard');
     } catch (err) {
       if (typeof err === 'object' && err !== null && 'response' in err) {

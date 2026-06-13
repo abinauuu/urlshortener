@@ -10,3 +10,7 @@ export const register = async (data: RegisterDto): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/auth/register', data);
     return response.data;
 };
+
+export const logout = async (refreshToken: string): Promise<void> => {
+    await api.post('/auth/logout', { refreshToken });
+};
