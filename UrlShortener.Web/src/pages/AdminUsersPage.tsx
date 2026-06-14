@@ -23,8 +23,7 @@ function AdminUsersPage() {
   }, []);
 
   const requestRoleChange = (user: AdminUser) => {
-    const newRole = user.role === 'ADMIN' ? 'USER' : 'ADMIN';
-    setConfirming({ user, role: newRole });
+    setConfirming({ user, role: user.role === 'ADMIN' ? 'USER' : 'ADMIN' });
   };
 
   const confirmRoleChange = async () => {
@@ -49,45 +48,66 @@ function AdminUsersPage() {
     }
   };
 
-  if (loading) return <div className="text-center mt-20">Loading...</div>;
+  if (loading) return (
+    <div className="flex min-h-screen bg-page">
+      <AdminNav />
+      <main className="flex-1 flex items-center justify-center">
+        <p className="text-[14px] text-muted font-medium">Loading…</p>
+      </main>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-page">
       <AdminNav />
-      <div className="max-w-4xl mx-auto py-8 px-4">
-        <h2 className="text-xl font-semibold mb-6">Users</h2>
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-left text-gray-500">
-              <tr>
-                <th className="px-4 py-3">Email</th>
-                <th className="px-4 py-3">Role</th>
-                <th className="px-4 py-3">URLs</th>
-                <th className="px-4 py-3">Joined</th>
-                <th className="px-4 py-3"></th>
+      <main className="flex-1 px-8 py-8">
+        <div className="flex items-center justify-between mb-7">
+          <h1 className="text-[22px] font-bold tracking-tight text-ink">Users</h1>
+          <span className="text-[13px] text-muted font-medium">{users.length} total</span>
+        </div>
+
+        {error && (
+          <div className="flex items-start gap-2 px-4 py-3 rounded-xl border border-danger-brd bg-danger-soft mb-5 text-[13.5px] font-semibold text-danger-text">
+            <span>⚠</span> {error}
+          </div>
+        )}
+
+        <div className="bg-surface rounded-2xl border border-border overflow-hidden" style={{ boxShadow: 'var(--shadow-card)' }}>
+          <table className="w-full text-[13.5px]">
+            <thead>
+              <tr className="border-b border-border bg-surface-2">
+                <th className="px-5 py-3 text-left text-[12px] font-semibold text-subtle uppercase tracking-wider">Email</th>
+                <th className="px-5 py-3 text-left text-[12px] font-semibold text-subtle uppercase tracking-wider">Role</th>
+                <th className="px-5 py-3 text-left text-[12px] font-semibold text-subtle uppercase tracking-wider">URLs</th>
+                <th className="px-5 py-3 text-left text-[12px] font-semibold text-subtle uppercase tracking-wider">Joined</th>
+                <th className="px-5 py-3" />
               </tr>
             </thead>
             <tbody>
               {users.map(user => (
-                <tr key={user.id} className="border-t">
-                  <td className="px-4 py-3">{user.email}</td>
-                  <td className="px-4 py-3">
+                <tr key={user.id} className="border-b border-border last:border-0 hover:bg-surface-2 transition-colors">
+                  <td className="px-5 py-3.5 text-ink font-medium">{user.email}</td>
+                  <td className="px-5 py-3.5">
                     <button
                       onClick={() => requestRoleChange(user)}
-                      className={`text-xs px-3 py-1 rounded-full font-medium ${
-                        user.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'
+                      className={`text-[12px] font-semibold px-2.5 py-1 rounded-lg cursor-pointer border transition-colors ${
+                        user.role === 'ADMIN'
+                          ? 'bg-accent-soft text-accent-soft-text border-transparent hover:opacity-80'
+                          : 'bg-surface-2 text-muted border-border hover:bg-surface'
                       }`}
                     >
                       {user.role}
                     </button>
                   </td>
-                  <td className="px-4 py-3">{user.urlCount}</td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-5 py-3.5 text-muted">{user.urlCount}</td>
+                  <td className="px-5 py-3.5 text-muted">
                     {new Date(user.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </td>
-                  <td className="px-4 py-3 text-right">
-                    <button onClick={() => void handleDelete(user.id)} className="text-xs text-red-600 hover:underline">
+                  <td className="px-5 py-3.5 text-right">
+                    <button
+                      onClick={() => void handleDelete(user.id)}
+                      className="text-[13px] font-semibold text-danger-text cursor-pointer hover:underline"
+                    >
                       Delete
                     </button>
                   </td>
@@ -96,24 +116,38 @@ function AdminUsersPage() {
             </tbody>
           </table>
         </div>
-      </div>
+      </main>
 
       {confirming && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setConfirming(null)}>
-          <div className="bg-white rounded-lg shadow-lg p-6 w-80" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold mb-2">Change role</h3>
-            <p className="text-sm text-gray-600 mb-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+          onClick={() => setConfirming(null)}
+        >
+          <div
+            className="bg-surface rounded-2xl border border-border p-7 w-[380px]"
+            style={{ boxShadow: 'var(--shadow-modal)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-[17px] font-bold text-ink mb-2">Change role</h3>
+            <p className="text-[14px] text-muted font-medium mb-6 leading-relaxed">
               {confirming.role === 'ADMIN'
                 ? `Make ${confirming.user.email} an admin? They'll be able to manage all users and URLs.`
                 : `Remove admin access from ${confirming.user.email}?`}
             </p>
             <div className="flex justify-end gap-3">
-              <button onClick={() => setConfirming(null)} className="text-sm text-gray-500 hover:underline">Cancel</button>
+              <button
+                onClick={() => setConfirming(null)}
+                className="h-10 px-4 rounded-xl border border-border-strong bg-surface text-[14px] font-semibold text-ink cursor-pointer hover:bg-surface-2 transition-colors"
+              >
+                Cancel
+              </button>
               <button
                 onClick={() => void confirmRoleChange()}
-                className={`text-sm px-4 py-2 rounded text-white ${
-                  confirming.role === 'ADMIN' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-blue-600 hover:bg-blue-700'
-                }`}
+                className="h-10 px-4 rounded-xl bg-accent text-accent-fg text-[14px] font-semibold border-none cursor-pointer transition-colors"
+                style={{ boxShadow: 'var(--shadow-card)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent-hover)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; }}
               >
                 Confirm
               </button>
