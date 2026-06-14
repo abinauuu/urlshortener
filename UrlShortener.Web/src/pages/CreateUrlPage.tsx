@@ -19,7 +19,6 @@ function CreateUrlPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
       await createUrl({
         originalUrl,
@@ -39,83 +38,129 @@ function CreateUrlPage() {
     }
   };
 
+  const focusRing = { borderColor: 'var(--accent)', boxShadow: '0 0 0 4px var(--ring)' };
+  const blurReset = { borderColor: '', boxShadow: '' };
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">URL Shortener</h1>
-        <Link to="/dashboard" className="text-sm text-blue-600 hover:underline">
-          Back to Dashboard
+    <div className="min-h-screen bg-page flex flex-col">
+      {/* Nav */}
+      <nav
+        className="sticky top-0 z-10 border-b border-[var(--glass-brd)] px-7 py-4 flex items-center"
+        style={{ background: 'var(--glass)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+      >
+        <Link
+          to="/dashboard"
+          className="inline-flex items-center gap-2 h-10 px-3 rounded-xl text-muted text-[14px] font-semibold no-underline transition-colors hover:bg-surface-2 hover:text-ink"
+        >
+          ← Back to Dashboard
         </Link>
       </nav>
 
-      <div className="max-w-lg mx-auto py-8 px-4">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-xl font-semibold mb-6">Create Short URL</h2>
+      {/* Content */}
+      <div className="flex-1 bg-surface-2 px-4 py-11">
+        <div className="max-w-[540px] mx-auto">
+          <h1 className="text-[26px] font-bold tracking-tight text-ink mb-1">Create short URL</h1>
+          <p className="text-[15px] text-muted font-medium mb-7">
+            Your links last 90 days. Custom codes and comments included.
+          </p>
 
-          {error && (
-            <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Original URL <span className="text-red-500">*</span>
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="url"
-                  value={originalUrl}
-                  onChange={(e) => setOriginalUrl(e.target.value)}
-                  className="flex-1 border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="https://example.com/very/long/url"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => void handlePaste()}
-                  className="px-3 py-2 border rounded text-sm text-gray-500 hover:text-blue-600 hover:border-blue-400 shrink-0"
-                >
-                  Paste
-                </button>
+          <div
+            className="bg-surface rounded-2xl border border-border p-7"
+            style={{ boxShadow: 'var(--shadow-card)' }}
+          >
+            {error && (
+              <div className="flex items-start gap-2 px-4 py-3 rounded-xl border border-danger-brd bg-danger-soft mb-6 text-[13.5px] font-semibold text-danger-text">
+                <span className="mt-px">⚠</span>
+                {error}
               </div>
-            </div>
+            )}
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Custom Short Code <span className="text-gray-400 font-normal">(optional)</span>
-              </label>
-              <input
-                type="text"
-                value={shortCode}
-                onChange={(e) => setShortCode(e.target.value)}
-                className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="my-link"
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              {/* Original URL */}
+              <div>
+                <label className="flex items-center gap-1 text-[14px] font-medium text-ink mb-2">
+                  Original URL <span className="text-danger">*</span>
+                </label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-subtle text-[17px]">🔗</span>
+                    <input
+                      type="url"
+                      value={originalUrl}
+                      onChange={(e) => setOriginalUrl(e.target.value)}
+                      placeholder="https://example.com/very/long/url"
+                      required
+                      className="w-full h-12 pl-10 pr-4 rounded-xl border border-border-strong bg-surface text-ink text-[14.5px] font-medium outline-none transition-shadow"
+                      style={{ fontFamily: 'inherit' }}
+                      onFocus={(e) => Object.assign(e.target.style, focusRing)}
+                      onBlur={(e) => Object.assign(e.target.style, blurReset)}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void handlePaste()}
+                    className="inline-flex items-center gap-2 h-12 px-4 rounded-xl border border-border-strong bg-surface text-ink text-[14.5px] font-semibold cursor-pointer shrink-0 transition-colors hover:bg-surface-2"
+                  >
+                    Paste
+                  </button>
+                </div>
+              </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium mb-1">
-                Comment <span className="text-gray-400 font-normal">(optional)</span>
-              </label>
-              <input
-                type="text"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="What is this link for?"
-              />
-            </div>
+              {/* Custom short code */}
+              <div>
+                <label className="block text-[14px] font-medium text-ink mb-2">
+                  Custom short code{' '}
+                  <span className="text-subtle font-normal">(optional)</span>
+                </label>
+                {/* Wrapper captures focus-within ring via bubbled events */}
+                <div
+                  className="flex items-center h-12 rounded-xl border border-border-strong bg-surface overflow-hidden transition-shadow"
+                  onFocus={(e) => Object.assign(e.currentTarget.style, focusRing)}
+                  onBlur={(e) => Object.assign(e.currentTarget.style, blurReset)}
+                >
+                  <span className="pl-4 pr-1 text-subtle text-[14.5px] font-medium whitespace-nowrap select-none">
+                    hop.li/
+                  </span>
+                  <input
+                    type="text"
+                    value={shortCode}
+                    onChange={(e) => setShortCode(e.target.value)}
+                    placeholder="spring-sale"
+                    className="flex-1 h-full border-none bg-transparent text-accent font-mono text-[14.5px] font-semibold outline-none p-0 pr-4"
+                  />
+                </div>
+              </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-50"
-            >
-              {loading ? 'Creating...' : 'Create URL'}
-            </button>
-          </form>
+              {/* Comment */}
+              <div>
+                <label className="block text-[14px] font-medium text-ink mb-2">
+                  Comment{' '}
+                  <span className="text-subtle font-normal">(optional)</span>
+                </label>
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="What is this link for?"
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-xl border border-border-strong bg-surface text-ink text-[14.5px] font-medium outline-none resize-y transition-shadow"
+                  style={{ fontFamily: 'inherit' }}
+                  onFocus={(e) => Object.assign(e.target.style, focusRing)}
+                  onBlur={(e) => Object.assign(e.target.style, blurReset)}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-12 rounded-xl bg-accent text-accent-fg text-[15.5px] font-semibold border-none cursor-pointer disabled:opacity-50 transition-colors"
+                style={{ boxShadow: 'var(--shadow-card)' }}
+                onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = 'var(--accent-hover)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; }}
+              >
+                {loading ? 'Creating…' : 'Create URL'}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

@@ -14,14 +14,11 @@ function RegisterPage() {
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
-
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
     }
-
     setLoading(true);
-
     try {
       const response = await register({ email, password });
       setTokens(response.accessToken, response.refreshToken);
@@ -38,69 +35,117 @@ function RegisterPage() {
     }
   };
 
+  const inputClass =
+    'w-full h-12 px-4 rounded-xl border border-border-strong bg-surface text-ink text-[15px] font-medium outline-none transition-shadow';
+  const focusStyle = { borderColor: 'var(--accent)', boxShadow: '0 0 0 4px var(--ring)' };
+  const blurStyle = { borderColor: '', boxShadow: '' };
+  const passwordMismatch = confirmPassword.length > 0 && confirmPassword !== password;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Create an Account</h1>
+    <div className="min-h-screen bg-page flex flex-col">
+      {/* Nav */}
+      <nav
+        className="sticky top-0 z-10 border-b border-[var(--glass-brd)] px-8 py-4 flex items-center gap-3"
+        style={{ background: 'var(--glass)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+      >
+        <div className="w-8 h-8 rounded-[9px] bg-accent flex items-center justify-center text-accent-fg text-base">
+          ↗
+        </div>
+        <Link to="/" className="text-[17px] font-bold tracking-tight text-ink no-underline">
+          hop.li
+        </Link>
+      </nav>
 
-        {error && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">
-            {error}
-          </div>
-        )}
+      {/* Content */}
+      <div
+        className="flex-1 flex items-center justify-center px-4 py-10"
+        style={{ background: 'radial-gradient(120% 70% at 50% 0%, var(--accent-soft), transparent 60%)' }}
+      >
+        <div className="w-full max-w-[380px]">
+          <h1 className="text-[26px] font-bold tracking-tight text-ink mb-1">Create an account</h1>
+          <p className="text-[14.5px] text-muted font-medium mb-6">90-day links, custom codes &amp; comments.</p>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="you@example.com"
-              required
-            />
-          </div>
+          {error && (
+            <div className="flex items-start gap-2 px-4 py-3 rounded-xl border border-danger-brd bg-danger-soft mb-5 text-[13.5px] font-semibold text-danger-text">
+              <span className="mt-px">⚠</span>
+              {error}
+            </div>
+          )}
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <label className="block text-[14px] font-medium text-ink mb-2">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+                className={inputClass}
+                style={{ fontFamily: 'inherit' }}
+                onFocus={(e) => Object.assign(e.target.style, focusStyle)}
+                onBlur={(e) => Object.assign(e.target.style, blurStyle)}
+              />
+            </div>
 
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-1">Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
-              required
-            />
-          </div>
+            <div>
+              <label className="block text-[14px] font-medium text-ink mb-2">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className={inputClass}
+                style={{ fontFamily: 'inherit' }}
+                onFocus={(e) => Object.assign(e.target.style, focusStyle)}
+                onBlur={(e) => Object.assign(e.target.style, blurStyle)}
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? 'Creating account...' : 'Register'}
-          </button>
-        </form>
+            <div>
+              <label className="block text-[14px] font-medium text-ink mb-2">Confirm password</label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className={inputClass}
+                style={{
+                  fontFamily: 'inherit',
+                  borderColor: passwordMismatch ? 'var(--danger)' : '',
+                  boxShadow: passwordMismatch ? '0 0 0 4px var(--danger-soft)' : '',
+                }}
+                onFocus={(e) => { if (!passwordMismatch) Object.assign(e.target.style, focusStyle); }}
+                onBlur={(e) => { if (!passwordMismatch) Object.assign(e.target.style, blurStyle); }}
+              />
+              {passwordMismatch && (
+                <p className="flex items-center gap-1 text-[13px] font-semibold text-danger-text mt-2">
+                  <span>⚠</span> Passwords do not match.
+                </p>
+              )}
+            </div>
 
-        <p className="text-sm text-center mt-4">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 hover:underline">
-            Login
-          </Link>
-        </p>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-12 rounded-xl bg-accent text-accent-fg text-[15px] font-semibold border-none cursor-pointer mt-2 disabled:opacity-50 transition-colors"
+              style={{ boxShadow: 'var(--shadow-card)' }}
+              onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = 'var(--accent-hover)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; }}
+            >
+              {loading ? 'Creating account…' : 'Register'}
+            </button>
+          </form>
+
+          <p className="text-[14px] text-muted font-medium text-center mt-6">
+            Already have an account?{' '}
+            <Link to="/login" className="text-accent font-bold no-underline hover:underline">
+              Login
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

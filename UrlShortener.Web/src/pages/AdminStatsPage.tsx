@@ -21,9 +21,23 @@ function AdminStatsPage() {
     void fetchStats();
   }, []);
 
-  if (loading) return <div className="text-center mt-20">Loading...</div>;
-  if (error) return <div className="text-center mt-20 text-red-500">{error}</div>;
-  if (!stats) return null;
+  if (loading) return (
+    <div className="flex min-h-screen bg-page">
+      <AdminNav />
+      <main className="flex-1 flex items-center justify-center">
+        <p className="text-[14px] text-muted font-medium">Loading…</p>
+      </main>
+    </div>
+  );
+
+  if (error || !stats) return (
+    <div className="flex min-h-screen bg-page">
+      <AdminNav />
+      <main className="flex-1 flex items-center justify-center">
+        <p className="text-[14px] text-danger-text font-medium">{error || 'No data'}</p>
+      </main>
+    </div>
+  );
 
   const cards = [
     { label: 'Total Users', value: stats.totalUsers },
@@ -34,19 +48,19 @@ function AdminStatsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-page">
       <AdminNav />
-      <div className="max-w-4xl mx-auto py-8 px-4">
-        <h2 className="text-xl font-semibold mb-6">Overview</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <main className="flex-1 px-8 py-8">
+        <h1 className="text-[22px] font-bold tracking-tight text-ink mb-7">Overview</h1>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
           {cards.map(card => (
-            <div key={card.label} className="bg-white rounded-lg shadow p-6">
-              <p className="text-sm text-gray-500">{card.label}</p>
-              <p className="text-3xl font-bold mt-2">{card.value}</p>
+            <div key={card.label} className="bg-surface rounded-2xl border border-border p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
+              <p className="text-[12px] font-semibold text-subtle uppercase tracking-wider mb-3">{card.label}</p>
+              <p className="text-[36px] font-bold tracking-tight text-ink leading-none">{card.value.toLocaleString()}</p>
             </div>
           ))}
         </div>
-      </div>
+      </main>
     </div>
   );
 }
