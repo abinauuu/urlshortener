@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../api/auth.api';
 import { setTokens } from '../utils/auth.utils';
+import ThemeToggle from '../components/ThemeToggle';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function LoginPage() {
     try {
       const response = await login({ email, password });
       setTokens(response.accessToken, response.refreshToken);
-      navigate('/dashboard');
+      navigate('/');
     } catch (err) {
       if (typeof err === 'object' && err !== null && 'response' in err) {
         const axiosErr = err as { response?: { data?: { message?: string } } };
@@ -48,6 +49,8 @@ function LoginPage() {
         <Link to="/" className="text-[17px] font-bold tracking-tight text-ink no-underline">
           hop.li
         </Link>
+        <div className="flex-1" />
+        <ThemeToggle />
       </nav>
 
       {/* Content */}

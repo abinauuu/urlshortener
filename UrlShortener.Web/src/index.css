@@ -3,6 +3,7 @@
 
 /* ── Design tokens (light mode) ── */
 :root {
+  color-scheme: light;
   --bg: #f7f6f2;
   --surface: #ffffff;
   --surface-2: #f4f3ee;
@@ -31,6 +32,39 @@
   --shadow-card-md: 0 1px 2px rgba(16,24,40,0.04), 0 8px 24px rgba(16,24,40,0.08);
   --shadow-modal: 0 12px 40px rgba(16,24,40,0.18);
   --ring: rgba(15, 118, 110, 0.22);
+}
+
+/* ── Design tokens (dark mode) ── */
+.dark {
+  color-scheme: dark;
+  --bg: #0e1014;
+  --surface: #181b21;
+  --surface-2: #21252c;
+  --border: #2a2e37;
+  --border-strong: #3a3f4a;
+  --ink: #f2f4f7;
+  --muted: #b3b9c4;
+  --subtle: #7b828e;
+  --accent: #14b8a6;
+  --accent-hover: #2dd4bf;
+  --accent-fg: #04201d;
+  --accent-soft: #0d2b29;
+  --accent-soft-text: #5eead4;
+  --green: #4ade80;
+  --green-soft: #102a1b;
+  --green-text: #4ade80;
+  --danger: #f87171;
+  --danger-soft: #2a1718;
+  --danger-text: #fca5a5;
+  --danger-brd: #4d2a2a;
+  --amber-soft: #2d2410;
+  --amber-text: #fbbf24;
+  --glass: rgba(20, 23, 28, 0.7);
+  --glass-brd: rgba(255, 255, 255, 0.07);
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.4), 0 4px 14px rgba(0,0,0,0.45);
+  --shadow-card-md: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5);
+  --shadow-modal: 0 12px 40px rgba(0,0,0,0.6);
+  --ring: rgba(45, 212, 191, 0.3);
 }
 
 /* ── Wire tokens into Tailwind v4 utilities ──

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createUrl } from '../api/urls.api';
+import ThemeToggle from '../components/ThemeToggle';
 
 function CreateUrlPage() {
   const navigate = useNavigate();
@@ -54,6 +55,8 @@ function CreateUrlPage() {
         >
           ← Back to Dashboard
         </Link>
+        <div className="flex-1" />
+        <ThemeToggle />
       </nav>
 
       {/* Content */}

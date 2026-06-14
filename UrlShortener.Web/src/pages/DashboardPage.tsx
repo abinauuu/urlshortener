@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
 import { getAllUrls, toggleUrlStatus, updateComment } from '../api/urls.api';
 import { logout } from '../api/auth.api';
 import { decodeToken, clearTokens } from '../utils/auth.utils';
+import ThemeToggle from '../components/ThemeToggle';
 import type { UrlResponse } from '../types/url.types';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
@@ -98,12 +99,12 @@ function DashboardPage() {
       {/* ── Sidebar ── */}
       <aside className="w-[244px] shrink-0 border-r border-border bg-surface-2 flex flex-col min-h-screen sticky top-0">
         {/* Brand */}
-        <div className="flex items-center gap-3 px-5 pt-5 pb-6">
+        <Link to="/" className="flex items-center gap-3 px-5 pt-5 pb-6 no-underline">
           <div className="w-8 h-8 rounded-[9px] bg-accent flex items-center justify-center text-accent-fg text-base shrink-0">
             ↗
           </div>
           <span className="text-[17px] font-bold tracking-tight text-ink">hop.li</span>
-        </div>
+        </Link>
 
         {/* Nav */}
         <nav className="flex flex-col gap-1 px-3">
@@ -144,12 +145,15 @@ function DashboardPage() {
               <p className="text-[12px] text-subtle font-semibold">{userRole}</p>
             </div>
           </div>
-          <button
-            onClick={() => void handleLogout()}
-            className="flex items-center gap-3 h-11 px-3 rounded-xl text-muted text-[14px] font-semibold text-left w-full border-none bg-transparent cursor-pointer hover:bg-surface hover:text-danger transition-colors"
-          >
-            ← Logout
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => void handleLogout()}
+              className="flex items-center gap-3 h-11 px-3 rounded-xl text-muted text-[14px] font-semibold text-left flex-1 border-none bg-transparent cursor-pointer hover:bg-surface hover:text-danger transition-colors"
+            >
+              ← Logout
+            </button>
+            <ThemeToggle />
+          </div>
         </div>
       </aside>
 
