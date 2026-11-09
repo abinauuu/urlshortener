@@ -9,6 +9,7 @@ import {
   toggleAdminUrl,
   removeUrl,
 } from './admin.service';
+import { isDatabaseError } from '../../lib/errors';
 
 export const getStats = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -33,6 +34,11 @@ export const updateUserRole = async (req: Request, res: Response): Promise<void>
     const user = await updateRole(req.params.id as string, req.body.role as Role);
     res.status(200).json(user);
   } catch (error) {
+    if (isDatabaseError(error)) {
+      console.error('[updateUserRole] database error:', error);
+      res.status(503).json({ message: 'Service temporarily unavailable. Please try again later.' });
+      return;
+    }
     res.status(400).json({ message: error instanceof Error ? error.message : 'Failed to update role' });
   }
 };
@@ -42,6 +48,11 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     await removeUser(req.params.id as string);
     res.status(204).send();
   } catch (error) {
+    if (isDatabaseError(error)) {
+      console.error('[deleteUser] database error:', error);
+      res.status(503).json({ message: 'Service temporarily unavailable. Please try again later.' });
+      return;
+    }
     res.status(400).json({ message: error instanceof Error ? error.message : 'Failed to delete user' });
   }
 };
@@ -60,6 +71,11 @@ export const toggleUrl = async (req: Request, res: Response): Promise<void> => {
     const url = await toggleAdminUrl(req.params.id as string);
     res.status(200).json(url);
   } catch (error) {
+    if (isDatabaseError(error)) {
+      console.error('[toggleUrl] database error:', error);
+      res.status(503).json({ message: 'Service temporarily unavailable. Please try again later.' });
+      return;
+    }
     res.status(400).json({ message: error instanceof Error ? error.message : 'Failed to toggle URL' });
   }
 };
@@ -69,6 +85,11 @@ export const deleteUrl = async (req: Request, res: Response): Promise<void> => {
     await removeUrl(req.params.id as string);
     res.status(204).send();
   } catch (error) {
+    if (isDatabaseError(error)) {
+      console.error('[deleteUrl] database error:', error);
+      res.status(503).json({ message: 'Service temporarily unavailable. Please try again later.' });
+      return;
+    }
     res.status(400).json({ message: error instanceof Error ? error.message : 'Failed to delete URL' });
   }
 };

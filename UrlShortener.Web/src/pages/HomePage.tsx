@@ -133,7 +133,7 @@ function HomePage() {
 
       {/* Nav */}
       <nav
-        className="sticky top-0 z-10 border-b border-[var(--glass-brd)] px-6 md:px-8 py-4 flex items-center gap-3"
+        className="sticky top-0 z-10 border-b border-[var(--glass-brd)] px-4 md:px-8 py-4 flex items-center gap-2 md:gap-3"
         style={{ background: 'var(--glass)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
       >
         <Link to="/" className="flex items-center gap-2.5 no-underline">
@@ -160,7 +160,7 @@ function HomePage() {
             <button
               type="button"
               onClick={() => void handleLogout()}
-              className="h-9 px-4 rounded-xl text-[14px] font-semibold text-muted bg-transparent border-none cursor-pointer transition-colors hover:bg-surface-2 hover:text-danger flex items-center"
+              className="h-9 px-4 rounded-xl text-[14px] font-semibold text-muted bg-transparent border-none cursor-pointer transition-colors hover:bg-surface-2 hover:text-danger hidden sm:flex items-center"
             >
               Logout
             </button>
@@ -180,7 +180,8 @@ function HomePage() {
               onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--accent-hover)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; }}
             >
-              Get started free
+              <span className="sm:hidden">Sign up</span>
+              <span className="hidden sm:inline">Get started free</span>
             </Link>
           </>
         )}

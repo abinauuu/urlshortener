@@ -22,7 +22,7 @@ function AdminStatsPage() {
   }, []);
 
   if (loading) return (
-    <div className="flex min-h-screen bg-page">
+    <div className="flex flex-col md:flex-row min-h-screen bg-page">
       <AdminNav />
       <main className="flex-1 flex items-center justify-center">
         <p className="text-[14px] text-muted font-medium">Loading…</p>
@@ -31,7 +31,7 @@ function AdminStatsPage() {
   );
 
   if (error || !stats) return (
-    <div className="flex min-h-screen bg-page">
+    <div className="flex flex-col md:flex-row min-h-screen bg-page">
       <AdminNav />
       <main className="flex-1 flex items-center justify-center">
         <p className="text-[14px] text-danger-text font-medium">{error || 'No data'}</p>
@@ -48,9 +48,9 @@ function AdminStatsPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-page">
+    <div className="flex flex-col md:flex-row min-h-screen bg-page">
       <AdminNav />
-      <main className="flex-1 px-8 py-8">
+      <main className="flex-1 min-w-0 px-5 md:px-8 py-6 md:py-8">
         <h1 className="text-[22px] font-bold tracking-tight text-ink mb-7">Overview</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
           {cards.map(card => (

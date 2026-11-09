@@ -19,6 +19,10 @@ function RegisterPage() {
       setError('Passwords do not match.');
       return;
     }
+    if (password.length < 8 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+      setError('Password must be at least 8 characters and include a letter and a number.');
+      return;
+    }
     setLoading(true);
     try {
       const response = await register({ email, password });
@@ -97,7 +101,7 @@ function RegisterPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="At least 8 chars, with a letter & number"
                 required
                 className={inputClass}
                 style={{ fontFamily: 'inherit' }}

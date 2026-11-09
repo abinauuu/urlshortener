@@ -49,7 +49,7 @@ function AdminUsersPage() {
   };
 
   if (loading) return (
-    <div className="flex min-h-screen bg-page">
+    <div className="flex flex-col md:flex-row min-h-screen bg-page">
       <AdminNav />
       <main className="flex-1 flex items-center justify-center">
         <p className="text-[14px] text-muted font-medium">Loading…</p>
@@ -58,9 +58,9 @@ function AdminUsersPage() {
   );
 
   return (
-    <div className="flex min-h-screen bg-page">
+    <div className="flex flex-col md:flex-row min-h-screen bg-page">
       <AdminNav />
-      <main className="flex-1 px-8 py-8">
+      <main className="flex-1 min-w-0 px-5 md:px-8 py-6 md:py-8">
         <div className="flex items-center justify-between mb-7">
           <h1 className="text-[22px] font-bold tracking-tight text-ink">Users</h1>
           <span className="text-[13px] text-muted font-medium">{users.length} total</span>
@@ -72,7 +72,40 @@ function AdminUsersPage() {
           </div>
         )}
 
-        <div className="bg-surface rounded-2xl border border-border overflow-hidden" style={{ boxShadow: 'var(--shadow-card)' }}>
+        {/* Mobile: one card per user */}
+        <div className="md:hidden flex flex-col gap-3">
+          {users.map(user => (
+            <div key={user.id} className="bg-surface rounded-2xl border border-border p-4" style={{ boxShadow: 'var(--shadow-card)' }}>
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <span className="text-[14px] font-bold text-ink truncate">{user.email}</span>
+                <button
+                  onClick={() => requestRoleChange(user)}
+                  className={`text-[12px] font-semibold px-2.5 py-1 rounded-lg cursor-pointer border transition-colors shrink-0 ${
+                    user.role === 'ADMIN'
+                      ? 'bg-accent-soft text-accent-soft-text border-transparent hover:opacity-80'
+                      : 'bg-surface-2 text-muted border-border hover:bg-surface'
+                  }`}
+                >
+                  {user.role}
+                </button>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12.5px] text-subtle font-medium mb-3">
+                <span>🔗 {user.urlCount} URLs</span>
+                <span>🗓 {new Date(user.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+              </div>
+              <div className="flex justify-end border-t border-border pt-2.5">
+                <button
+                  onClick={() => void handleDelete(user.id)}
+                  className="text-[13px] font-semibold text-danger-text cursor-pointer hover:underline"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden md:block bg-surface rounded-2xl border border-border overflow-hidden" style={{ boxShadow: 'var(--shadow-card)' }}>
           <table className="w-full text-[13.5px]">
             <thead>
               <tr className="border-b border-border bg-surface-2">
@@ -125,7 +158,7 @@ function AdminUsersPage() {
           onClick={() => setConfirming(null)}
         >
           <div
-            className="bg-surface rounded-2xl border border-border p-7 w-[380px]"
+            className="bg-surface rounded-2xl border border-border p-7 w-full max-w-[380px] mx-4"
             style={{ boxShadow: 'var(--shadow-modal)' }}
             onClick={(e) => e.stopPropagation()}
           >

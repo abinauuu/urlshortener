@@ -41,7 +41,7 @@ function AdminUrlsPage() {
   };
 
   if (loading) return (
-    <div className="flex min-h-screen bg-page">
+    <div className="flex flex-col md:flex-row min-h-screen bg-page">
       <AdminNav />
       <main className="flex-1 flex items-center justify-center">
         <p className="text-[14px] text-muted font-medium">Loading…</p>
@@ -50,9 +50,9 @@ function AdminUrlsPage() {
   );
 
   return (
-    <div className="flex min-h-screen bg-page">
+    <div className="flex flex-col md:flex-row min-h-screen bg-page">
       <AdminNav />
-      <main className="flex-1 px-8 py-8">
+      <main className="flex-1 min-w-0 px-5 md:px-8 py-6 md:py-8">
         <div className="flex items-center justify-between mb-7">
           <h1 className="text-[22px] font-bold tracking-tight text-ink">URLs</h1>
           <span className="text-[13px] text-muted font-medium">{urls.length} total</span>
@@ -64,7 +64,52 @@ function AdminUrlsPage() {
           </div>
         )}
 
-        <div className="bg-surface rounded-2xl border border-border overflow-hidden" style={{ boxShadow: 'var(--shadow-card)' }}>
+        {/* Mobile: one card per URL */}
+        <div className="md:hidden flex flex-col gap-3">
+          {urls.map(url => {
+            const isExpired = new Date(url.expiresAt) < new Date();
+            return (
+              <div key={url.id} className="bg-surface rounded-2xl border border-border p-4" style={{ boxShadow: 'var(--shadow-card)' }}>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <span className="font-mono font-semibold text-accent text-[15px] truncate">
+                    <span className="text-muted">hop.li/</span>{url.shortCode}
+                  </span>
+                  <button
+                    onClick={() => void handleToggle(url.id)}
+                    className={`inline-flex items-center gap-1.5 text-[12px] font-semibold px-2.5 py-1 rounded-lg cursor-pointer border transition-colors shrink-0 ${
+                      url.isActive
+                        ? 'bg-success-soft text-success-text border-transparent hover:opacity-80'
+                        : 'bg-surface-2 text-muted border-border hover:bg-surface'
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${url.isActive ? 'bg-success' : 'bg-subtle'}`} />
+                    {url.isActive ? 'Active' : 'Inactive'}
+                  </button>
+                </div>
+                <p className="text-[13px] text-muted truncate mb-3">{url.originalUrl}</p>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12.5px] text-subtle font-medium mb-3">
+                  <span>👤 {url.userEmail ?? 'Guest'}</span>
+                  <span>📊 {url.clicks} clicks</span>
+                  {isExpired ? (
+                    <span className="font-semibold px-2 py-0.5 rounded-md bg-danger-soft text-danger-text border border-danger-brd">Expired</span>
+                  ) : (
+                    <span>🗓 {new Date(url.expiresAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                  )}
+                </div>
+                <div className="flex justify-end border-t border-border pt-2.5">
+                  <button
+                    onClick={() => void handleDelete(url.id)}
+                    className="text-[13px] font-semibold text-danger-text cursor-pointer hover:underline"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="hidden md:block bg-surface rounded-2xl border border-border overflow-hidden" style={{ boxShadow: 'var(--shadow-card)' }}>
           <table className="w-full text-[13.5px]">
             <thead>
               <tr className="border-b border-border bg-surface-2">

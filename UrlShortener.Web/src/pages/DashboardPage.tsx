@@ -94,10 +94,34 @@ function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-page flex">
+    <div className="min-h-screen bg-page flex flex-col md:flex-row">
+
+      {/* ── Mobile top bar (phones only) ── */}
+      <header className="md:hidden flex items-center gap-3 px-5 py-3 border-b border-border bg-surface-2 sticky top-0 z-20">
+        <Link to="/" className="flex items-center gap-2.5 no-underline">
+          <div className="w-8 h-8 rounded-[9px] bg-accent flex items-center justify-center text-accent-fg text-base shrink-0">↗</div>
+          <span className="text-[17px] font-bold tracking-tight text-ink">hop.li</span>
+        </Link>
+        <div className="flex-1" />
+        {isAdmin && (
+          <button
+            onClick={() => navigate('/admin')}
+            className="h-9 px-3 rounded-xl text-[14px] font-semibold text-muted bg-transparent border-none cursor-pointer hover:bg-surface hover:text-ink transition-colors flex items-center gap-1.5"
+          >
+            🛡 Admin
+          </button>
+        )}
+        <ThemeToggle />
+        <button
+          onClick={() => void handleLogout()}
+          className="h-9 px-3 rounded-xl text-[14px] font-semibold text-muted bg-transparent border-none cursor-pointer hover:bg-surface hover:text-danger transition-colors flex items-center"
+        >
+          Logout
+        </button>
+      </header>
 
       {/* ── Sidebar ── */}
-      <aside className="w-[244px] shrink-0 border-r border-border bg-surface-2 flex flex-col min-h-screen sticky top-0">
+      <aside className="hidden md:flex w-[244px] shrink-0 border-r border-border bg-surface-2 flex-col min-h-screen sticky top-0">
         {/* Brand */}
         <Link to="/" className="flex items-center gap-3 px-5 pt-5 pb-6 no-underline">
           <div className="w-8 h-8 rounded-[9px] bg-accent flex items-center justify-center text-accent-fg text-base shrink-0">
@@ -158,7 +182,7 @@ function DashboardPage() {
       </aside>
 
       {/* ── Main content ── */}
-      <main className="flex-1 min-w-0 px-8 py-7">
+      <main className="flex-1 min-w-0 px-5 md:px-8 py-6 md:py-7">
         {/* Header */}
         <div className="flex items-end justify-between gap-4 mb-6">
           <div>
@@ -208,7 +232,7 @@ function DashboardPage() {
             {urls.map(url => (
               <div
                 key={url.id}
-                className="bg-surface border border-border rounded-2xl p-5 flex gap-5 items-start transition-shadow hover:border-border-strong"
+                className="bg-surface border border-border rounded-2xl p-4 md:p-5 flex flex-col sm:flex-row gap-4 sm:gap-5 items-start transition-shadow hover:border-border-strong"
                 onMouseEnter={(e) => { e.currentTarget.style.boxShadow = 'var(--shadow-card-md)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.boxShadow = ''; }}
               >
@@ -287,7 +311,7 @@ function DashboardPage() {
                 </div>
 
                 {/* Right: clicks + QR + pill */}
-                <div className="flex flex-col items-end gap-3 shrink-0">
+                <div className="w-full sm:w-auto flex flex-row sm:flex-col items-center sm:items-end justify-between gap-3 shrink-0">
                   <span className="text-[14.5px] font-bold text-ink">
                     {url.clicks.toLocaleString()} clicks
                   </span>

@@ -76,6 +76,10 @@ function ProfilePage() {
       setPwError('New passwords do not match');
       return;
     }
+    if (newPassword.length < 8 || !/[A-Za-z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+      setPwError('Password must be at least 8 characters and include a letter and a number.');
+      return;
+    }
     setPwSaving(true);
     try {
       await changePassword({ currentPassword, newPassword });
@@ -260,7 +264,7 @@ function ProfilePage() {
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="At least 6 characters"
+                      placeholder="At least 8 chars, with a letter & number"
                       required
                       className={inputClass}
                       style={{ fontFamily: 'inherit' }}
